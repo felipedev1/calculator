@@ -29,8 +29,25 @@ function AppService() {
     return result;
   }
 
+  function concatNumber(currentNumber, numConcat) {
+    if(currentNumber == '0' || currentNumber == null) {
+      currentNumber = '';
+    }
+
+    if(numConcat == '.' && currentNumber === '') {
+      return '0.';
+    }
+
+    if(numConcat == '.' && currentNumber.indexOf('.') > -1) {
+      return currentNumber;
+    }
+
+    return currentNumber + numConcat;
+  }
+
   return [
     calculate,
+    concatNumber,
     SUM,
     SUBTRACTION,
     MULTIPLICATION,

@@ -1,7 +1,7 @@
 import AppService from './App.service'
 
 describe('Teste de AppService', () => {
-  const [calculate, SUM, SUBTRACTION, MULTIPLICATION, DIVISION] = AppService();
+  const [calculate, concatNumber, SUM, SUBTRACTION, MULTIPLICATION, DIVISION] = AppService();
 
   it('1 + 4 should be 5', () => {
     let sum = calculate(1, 4, SUM);

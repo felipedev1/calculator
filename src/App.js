@@ -1,17 +1,58 @@
 import React, {useState} from 'react';
 import { Jumbotron, Container, Row, Col, Button, Form } from 'react-bootstrap'
 import './App.css';
+import AppService from './App.service';
 
 function App() {
 
+  const [calculate, concatNumber, SUM, SUBTRACTION, MULTIPLICATION, DIVISION] = AppService();
+
   const [txtNumbers, setTxtNumbers] = useState('0');
+  const [number1, setNumber1] = useState('0');
+  const [number2, setNumber2] = useState(null);
+  const [operation, setOperation] = useState(null);
 
   function addNumber(number){
-    setTxtNumbers(txtNumbers + number)
+    let result;
+    if(operation === null) {
+      result = concatNumber(number1, number);
+      setNumber1(result);
+    } else {
+      result = concatNumber(number2, number);
+      setNumber2(result);
+    }
+
+    setTxtNumbers(result);
   }
 
-  function defineOperation(operation) {
-    setTxtNumbers(operation)
+  function defineOperation(op) {
+    if(operation === null){
+      setOperation(op);
+      return;
+    }
+
+    if(number2 !== null){
+      const result = calculate(parseFloat(number1), parseFloat(number2), operation);
+      setOperation(op);
+      setNumber1(result.toString());
+      setNumber2(null);
+      setTxtNumbers(result.toString());
+    }
+  }
+
+  function actionCalculate() {
+    if(number2 === null){
+      return;
+    }
+
+    const result = calculate(parseFloat(number1), parseFloat(number2), operation);
+    setTxtNumbers(result);
+  }
+
+  function clear() {
+    setTxtNumbers('0');
+    setNumber1(null);
+    setNumber2(null);
   }
 
   return (
@@ -26,7 +67,8 @@ function App() {
       <Container>
         <Row>
           <Col xs="3">
-            <Button variant="danger">C</Button>
+            <Button variant="danger"
+              onClick={clear} >C</Button>
           </Col>
           <Col xs="9">
             <Form.Control type="text"
@@ -54,7 +96,7 @@ function App() {
           </Col>
           <Col>
             <Button variant="warning" 
-              onClick={() => defineOperation('/')} >/</Button>
+              onClick={() => defineOperation(DIVISION)} >/</Button>
           </Col>
         </Row>
         <Row>
@@ -75,7 +117,7 @@ function App() {
           </Col>
           <Col>
             <Button variant="warning" 
-              onClick={() => defineOperation('*')} >*</Button>
+              onClick={() => defineOperation(MULTIPLICATION)} >*</Button>
           </Col>
         </Row>
         <Row>
@@ -96,7 +138,7 @@ function App() {
           </Col>
           <Col>
             <Button variant="warning" 
-              onClick={() => defineOperation('-')} >-</Button>
+              onClick={() => defineOperation(SUBTRACTION)} >-</Button>
           </Col>
         </Row>
         <Row>
@@ -107,15 +149,16 @@ function App() {
           </Col>
           <Col>
             <Button variant="light" 
-              onClick={(e) => addNumber()} 
+              onClick={(e) => addNumber('.')} 
             >.</Button>
           </Col>
           <Col>
-            <Button variant="success">=</Button>
+            <Button variant="success"
+              onClick={actionCalculate} >=</Button>
           </Col>
           <Col>
             <Button variant="warning" 
-              onClick={() => defineOperation('+')} >+</Button>
+              onClick={() => defineOperation(SUM)} >+</Button>
           </Col>
         </Row>
       </Container>

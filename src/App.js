@@ -75,6 +75,7 @@ function App() {
               name="txtNumbers"
               className="text-right"
               value={txtNumbers}
+              data-testid="txtNumbers"
               readOnly />
           </Col>
         </Row>
